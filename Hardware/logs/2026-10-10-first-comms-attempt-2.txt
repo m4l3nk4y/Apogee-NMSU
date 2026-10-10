@@ -1,3 +1,23 @@
+# FlatSat Log — First Comms Capture (Attempt 2)
+
+**Date:** 2026-10-10
+**Operator:** Fernanda Orduno
+**Board:** FlatSat v1.0, serial 5034363432350018
+**Port:** COM11
+**Baud:** 9600
+**Situation:** Second capture session during initial FlatSat bring-up. Same setup as Attempt 1. Slightly different packet pattern from the peer FlatSat.
+
+## Expected behavior
+
+Live `RX:` lines from peer transmissions at ~2 Hz.
+
+## Observed behavior
+
+Packets arrive at ~2 Hz, alternating between long (~30-byte) and short (~20-byte) frames. RSSI -29 to -36 dBm, SNR 9–12 dB. No `TX:` lines observed.
+
+## Raw output
+
+
  *  Executing task: C:\Users\m4l3n\.platformio\penv\Scripts\platformio.exe device monitor 
 
 --- Terminal on COM11 | 9600 8-N-1
@@ -57,4 +77,3 @@ RX: 0801C0000012000000950295000000681001000000000073F1 | RSSI: -32 | SNR: 9
 RX: 081FC00000140000009B760AC8660D0036CAFF0000FB0368104762 | RSSI: -33 | SNR: 11
 RX: 0801C00000120000009B029B0000006810010000000000836B | RSSI: -35 | SNR: 10
  *  Terminal will be reused by tasks, press any key to close it. 
-
