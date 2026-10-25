@@ -1,83 +1,177 @@
-<div align="center">
+# Dual-FlatSat Cyber-Physical Space Systems Research Project
 
-<img src="https://raw.githubusercontent.com/wiki/Pwnsat/FlatSat/flatsat-wiki-banner.png" alt="FlatSat Satellite Security Research Platform Banner" width="100%">
+## Students
+- **Fernanda Orduno** (Student 1 - Hardware Lead)
+- **Julio Sandoval** (Student 2 - Communications Lead)
+- **Jesus Garcia** (Student 3 - Cyber-Physical Integration Lead)
+- **Jack Pritchard** (Student 4 - Cybersecurity Lead)
 
-# FlatSat v1.0
+## Overview
 
-**The world’s first open-source and hardware platform vulnerable-by-design, engineered specifically to learn space hacking adn aerospace cybersecurity.**
+> **Guiding Principle:** Prioritize working, reproducible experiments over adding features. A simple experiment that works repeatedly and produces measurable data is more valuable for research than a complicated demonstration that works only once.
 
-</div>
+**Research Question:** How can two low-cost FlatSat platforms be used to create reproducible cyber-physical spacecraft security experiments?
 
----
-
-## Welcome to FlatSat
-
-FlatSat is a hardware-based training platform designed to be vulnerable on purpose. It is built for hackers, engineers, and space enthusiasts who want to dive deep into space-grade systems, learn cybersecurity concepts, and prototype their own payloads in a safe, controlled environment.
-
-The project simulates critical real-world satellite subsystems, orbital telemetry, and authentic aerospace communication protocols, serving as a bridge between hardware hacking and aerospace security research.
-
----
-
-## What You Can Do With FlatSat
-
-* **Hands-on Learning:** Use FlatSat as the hardware companion to your aerospace cybersecurity studies, featuring lessons on binary exploitation, secure communication, reverse engineering, and space protocols.
-* **Hack Real Vulnerabilities:** Explore and exploit firmware designed to simulate historical or realistic software failures in orbiting infrastructure.
-* **Join Space CTFs:** Participate in space-themed Capture The Flag challenges that simulate real satellite operation scenarios, turning your board into your own spacecraft.
-* **Prototype Your Payloads:** Use the onboard components to develop and test your own payload logic, radio communication, or telemetry systems before deploying larger projects.
-
----
-
-## Hardware Overview
-
-FlatSat's physical architecture layout is fully accessible and designed for open hardware auditing:
-
-* **On-Board Computer (OBC):** Powered by the dual-core Raspberry Pi RP2040 microcontroller.
-* **Dual RF Link Subsystem:** Equipped with two independent Semtech SX1262 sub-GHz LoRa modules dedicated to Uplink (receive) and Downlink (transmit) configurations.
-* **Onboard Sensors:** Features a BME280 environmental sensor and a LIS2DH12 3-axis accelerometer to emulate real spatial telemetry.
-* **Exposed Auditing Interfaces:** Physical header connector breakouts for direct bus monitoring via UART, I2C, and SWD debug lines.
-
-> **RF Compliance Note:** FlatSat operates exclusively within standard license-free ISM bands (typically 433 MHz or 915 MHz depending on your region). This ensures a legal, safe educational ecosystem that does not interfere with production space systems or critical ground infrastructure.
+| Week | Dates | Focus | Checkpoint / Deliverable |
+| :--- | :--- | :--- | :--- |
+| **[Week 1](#week-1)** | 10/05 - 10/11 | Bring-Up and Division of Responsibilities | Both FlatSats boot and team members can interact with them. |
+| **[Week 2](#week-2)** | 10/12 - 10/18 | Hardware and Communication Characterization | Architecture diagram showing hardware, software, comms, and control paths. |
+| **[Week 3](#week-3)** | **10/19 - 10/25** | First FlatSat-to-FlatSat Communication | Live cross-FlatSat control demonstration (First major go/no-go). |
+| **[Week 4](#week-4)** | 10/26 - 11/01 | Build the Control Framework | Multiple physical controls reliably generate remote commands. |
+| **[Week 5](#week-5)** | 11/02 - 11/08 | Solar Tracker Telemetry Integration | Live telemetry dashboard displaying real-time physical changes. |
+| **[Week 6](#week-6)** | 11/09 - 11/15 | Baseline Experiments | Baseline dataset and reproducible experiment procedure. |
+| **[Week 7](#week-7)** | 11/16 - 11/22 | Cybersecurity Experiments | At least two reproducible attacks with observable physical effects. |
+| **[Week 8](#week-8)** | 11/23 - 11/29 | Evaluation | Experimental results showing what distinguishes legitimate vs manipulated interaction. |
+| **[Week 9](#week-9)** | 11/30 - 12/06 | Final Demonstration and Freeze | Final live demonstration, documentation, and report. |
 
 ---
 
-## Firmware & Attacks
+## Team Roles & Subsystem Ownership
 
-* **[`Firmware/`](Firmware/):** The vulnerable-by-design firmware source, a pre-built `.uf2` ready to flash (`Firmware/build/`), and `platformio.ini` to build it yourself. See [`Firmware/README.md`](Firmware/README.md) for the full diff against the public baseline.
-* **[`Attacks/`](Attacks/):** Eight attack scripts (`00`–`07`) exploiting the vulnerabilities above, each in an RF variant (HackRF/RTL-SDR) and a USB variant. See [`Attacks/README.md`](Attacks/README.md) for what's here, and the wiki (below) for the full step-by-step walkthrough of each one.
+### Fernanda Orduno — Student 1: FlatSat Hardware Lead
+**Primary Goal:** Understand, configure, and document the physical FlatSat platform.
+*   **Tasks:**
+    *   Inventory both FlatSats and their major components.
+    *   Identify usable processors, interfaces, sensors (LIS2DH12 accelerometer, BME280 temp sensor), buttons, switches, LEDs, and communication interfaces.
+    *   Establish reliable startup and recovery procedures.
+    *   Determine which hardware components can be controlled programmatically.
+    *   Develop basic hardware test programs.
+    *   Support integration of physical controls and measure physical changes during attacks.
+*   **Deliverables:** Hardware inventory, FlatSat architecture diagram, setup/recovery guide, hardware interface documentation, basic hardware test scripts.
+
+### Julio Sandoval — Student 2: Communications Lead
+**Primary Goal:** Establish reliable communication between FlatSat A and FlatSat B.
+*   **Tasks:**
+    *   Identify available communication mechanisms.
+    *   Establish bidirectional communication.
+    *   Define a simple command/message format.
+    *   Develop software for sending commands between FlatSats.
+    *   Capture communication traffic.
+    *   Measure basic latency and reliability.
+    *   Support the Solar Tracker telemetry transmission.
+*   **Deliverables:** Working FlatSat-to-FlatSat communication, communication architecture diagram, command/message specification, communication scripts, example communication captures, basic latency/reliability measurements.
+
+### Jesus Garcia — Student 3: Cyber-Physical Integration Lead
+**Primary Goal:** Connect physical inputs to remotely controlled software behavior and build the visual interface.
+*   **Tasks:**
+    *   Identify appropriate physical controls.
+    *   Develop software to read those controls.
+    *   Convert physical inputs into commands.
+    *   Work with Student 2 to transmit commands between FlatSats.
+    *   Build a real-time "Mission Control" telemetry dashboard (UI) to visualize solar panel angle and temperature.
+    *   Instrument the end-to-end interaction.
+*   **Deliverables:** Physical input interface, input-to-command software, Telemetry Dashboard integration, documentation of the complete control pipeline, live demonstration.
+
+### Jack Pritchard — Student 4: Cybersecurity Lead
+**Primary Goal:** Characterize and manipulate communication between the two FlatSats in a controlled laboratory environment.
+*   **Tasks:**
+    *   Identify exposed services and protocols and capture normal communication.
+    *   Identify trust assumptions between the two FlatSats.
+    *   Determine whether commands are authenticated or integrity protected.
+    *   Implement controlled experiments such as command replay, injection, modification, or dropping (e.g., spoofing tilt commands or dropping temperature alerts).
+    *   Record the communication effect and physical system effect for each experiment.
+    *   Collect benign and attack traces for comparison.
+*   **Deliverables:** Basic attack-surface assessment, baseline traffic captures, at least two working security experiments, attack scripts/tools, benign and attack traces, short analysis of observable physical effects.
 
 ---
 
-## Technical Documentation and Guides (Wiki)
+## Target Integration Demonstration
 
-All deep technical documentation, source analysis, and setup guides have been centralized. If you want to start compiling, debugging, or exploiting the platform, please visit the [FlatSat Wiki](https://github.com/Pwnsat/FlatSat/wiki):
+**Pipeline:** Physical Input ➔ FlatSat B ➔ Communication Link ➔ FlatSat A ➔ Dashboard / Physical Sensor Change
 
-* **[01. Quick Start Guide](https://github.com/Pwnsat/FlatSat/wiki/Getting-Started):** Toolchain setup, compiling the firmware, flashing the RP2040, and verifying hardware operations.
-* **[02. Hardware Anatomy](https://github.com/Pwnsat/FlatSat/wiki/Hardware-Anatomy-&-Specifications):** Physical layout, schematics, pinouts, and hardware debugging ports.
-* **[03. Core Firmware Architecture](https://github.com/Pwnsat/FlatSat/wiki/Firmware-&-System-Architecture):** Deep dive into the Asymmetric Multiprocessing (AMP) architecture dividing tasks across Core 0 and Core 1.
-* **[04. Space Packet Protocol (CCSDS)](https://github.com/Pwnsat/FlatSat/wiki/Space-Packet-Protocol---CCSDS):** Aerospace framing standards, packet encapsulation structure, and the active APID registry.
-* **[05. Offensive Attack Vectors](https://github.com/Pwnsat/FlatSat/wiki/Satellite-Hacking-&-Attack-Vectors):** The security playground. Explaining packet fuzzing, telecommand spoofing, buffer overflows, and unauthorized subsystem manipulation.
-* **[06. Attack Walkthroughs (00–07)](https://github.com/Pwnsat/FlatSat/wiki/Attack-Walkthroughs-00-07):** Step-by-step: prerequisites, the exact command, and how to confirm each of the 8 validated attacks worked against real hardware.
+*The FlatSat A will act as a solar tracker (using the LIS2DH12 and BME280). FlatSat B acts as Mission Control. The implementation is kept modular so the dashboard can later be swapped for a spacecraft-relevant ground station application.*
 
 ---
 
-## Collaboration and Community
+## Detailed Nine-Week Schedule
 
-This project is an open-source initiative maintained by PWNSAT and Electronic Cats. Contributions are highly welcome.
+### Week 1
+**Dates:** 10/05 - 10/11
+**Focus:** Bring-Up and Division of Responsibilities
+*   [x] Both FlatSats must be operational.
+*   [x] Reproduce the existing environment.
+*   [x] Inspect the hardware/software.
+*   [x] Establish the shared repository.
+*   [x] Assign subsystem ownership.
+*   **Checkpoint:** Both FlatSats boot and team members can interact with them.
 
-## Disclaimer
+### Week 2
+**Dates:** 10/12 - 10/18
+**Focus:** Hardware and Communication Characterization
+*   [x] **Fernanda:** Document hardware and interfaces.
+*   [x] **Julio:** Investigate communications.
+*   [x] **Jesus:** Test physical I/O.
+*   [x] **Jack:** Map software, services, protocols, and potential attack surfaces.
+*   **Checkpoint:** Architecture diagram showing hardware, software, communication interfaces, and potential control paths.
 
-This project was created for educational purposes, to teach and learn aerospace cybersecurity. Neither PWNSAT nor Electronic Cats are responsible for how the knowledge, code, or tools hosted in this repository are used. Use only against hardware, firmware, or signal sources you own or are explicitly authorized to test.
+### Week 3
+**Dates:** **10/19 - 10/25 (CURRENT WEEK)**
+**Focus:** First FlatSat-to-FlatSat Communication
+*   [ ] The team focuses on one goal: make FlatSat B cause something observable to happen on FlatSat A.
+*   [ ] A simple button-to-message-to-LED action is sufficient (e.g., button press on B turns on LED on A).
+*   **Checkpoint:** Live cross-FlatSat control demonstration. *(This is the first major go/no-go milestone).*
 
-## License
+### Week 4
+**Dates:** 10/26 - 11/01
+**Focus:** Build the Control Framework
+*   [ ] Generalize the Week 3 demonstration into a simple command framework (e.g., TILT_LEFT, TILT_RIGHT, DEPLOY_PANEL, RESET).
+*   [ ] Jack captures and studies this communication.
+*   **Checkpoint:** Multiple physical controls reliably generate remote commands.
 
-Electronic Cats invests time and resources providing this open source design, please support Electronic Cats and open-source hardware by purchasing products from Electronic Cats!
+### Week 5
+**Dates:** 11/02 - 11/08
+**Focus:** Solar Tracker & Telemetry Integration
+*   [ ] Connect the command framework to the physical sensors (accelerometer/temp).
+*   [ ] Jesus builds the live telemetry dashboard to display the data.
+*   **Checkpoint:** Live telemetry dashboard displaying real-time physical changes on FlatSat A.
 
-Designed by PWNSAT and Electronic Cats.
+### Week 6
+**Dates:** 11/09 - 11/15
+**Focus:** Baseline Experiments
+*   [ ] Stabilize the system and run repeatable trials.
+*   [ ] Collect commands, network traffic, timestamps, latency, input/output behavior, and errors.
+*   **Checkpoint:** Baseline dataset and reproducible experiment procedure.
 
-Hardware released under an CERN Open Hardware Licence v1.2. See the LICENSE_HARDWARE file for more information. Firmware and attack scripts are released under GPL-2.0-or-later — see LICENSE_FIRMWARE and Attacks/LICENSE.
+### Week 7
+**Dates:** 11/16 - 11/22
+**Focus:** Cybersecurity Experiments
+*   [ ] Jack leads controlled manipulation experiments.
+*   [ ] Prioritize replay and injection; attempt modification or delay/drop only if feasible.
+*   **Checkpoint:** At least two reproducible attacks with observable physical effects.
 
-PWNSAT and Electronic Cats are a registered trademark, please do not use if you sell these PCBs.
+### Week 8
+**Dates:** 11/23 - 11/29
+**Focus:** Evaluation
+*   [ ] Run structured normal-versus-manipulated trials.
+*   [ ] Record expected commands, transmitted commands, attack status, network evidence, target behavior, timing, and success/failure.
+*   **Checkpoint:** Experimental results that show what observable evidence distinguishes legitimate from manipulated interaction.
 
-# Special Thanks
-A special thanks to **Alex Lynd**. His support made it possible to kick off the first version of the project, and his contribution remains a fundamental part of PWNSAT. His work will always be embedded in what this project has become.
+### Week 9
+**Dates:** 11/30 - 12/06
+**Focus:** Final Demonstration and Freeze
+*   [ ] Final live demonstration early in the week.
+*   [ ] Freeze development.
+*   [ ] Focus on reproducibility, documentation, report, and presentation.
+*   **Checkpoint:** Final live demonstration, documentation, report, and presentation.
 
+---
+
+## Final Team Deliverables
+1.  [ ] Working dual-FlatSat testbed.
+2.  [ ] FlatSat hardware/software architecture diagram.
+3.  [ ] Documented FlatSat-to-FlatSat communication mechanism.
+4.  [ ] Physical remote-control interface.
+5.  [ ] Solar Tracker Telemetry Dashboard demonstration.
+6.  [ ] At least two reproducible cybersecurity experiments.
+7.  [ ] Baseline and attack communication captures.
+8.  [ ] Shared source-code repository with setup instructions.
+9.  [ ] Final technical report.
+10. [ ] Final team presentation and live demonstration.
+
+---
+
+## Minimum, Target, and Stretch Outcomes
+
+*   **Minimum:** Two FlatSats communicate reliably and physical input on one produces observable behavior on the other.
+*   **Target:** The team completes the Solar Tracker Dashboard demonstration and at least two controlled cybersecurity experiments.
+*   **Stretch:** The team transfers one attack from the demonstration to a spacecraft-relevant command (e.g., spoofing an attitude control command) and collects sufficient experimental data to support a future poster or research paper.
