@@ -1,0 +1,41 @@
+# apply_test02.ps1
+# Run from the project root (the folder that contains BOTH "webapp" and "modules").
+# Copies the TEST 02 dashboard into the folder Flask really serves (modules\webapp).
+# Keeps a backup of the old template. Does not touch app.py, telemetry, serial code or firmware.
+
+$ErrorActionPreference = "Stop"
+$root = (Get-Location).Path
+$src  = Join-Path $root "webapp"
+$dst  = Join-Path $root "modules\webapp"
+$utf8 = New-Object System.Text.UTF8Encoding($false)
+
+if (-not (Test-Path (Join-Path $dst "app.py"))) {
+    throw "Wrong folder: modules\webapp\app.py not found here. cd into the project root first."
+}
+$srcHtml = Join-Path $src "templates\dashboard.html"
+$text = [System.IO.File]::ReadAllText($srcHtml, $utf8)
+if ($text -notmatch "TEST 02") {
+    throw "webapp\templates\dashboard.html does not contain 'TEST 02'. This may be the wrong copy of the project folder."
+}
+
+# 1. Backup of the old (currently served) template
+$bk = Join-Path $root "_backup_before_test02"
+New-Item -ItemType Directory -Force $bk | Out-Null
+Copy-Item (Join-Path $dst "templates\dashboard.html") (Join-Path $bk "dashboard.html.orig") -Force
+
+# 2. New CSS + JS, under new names so the old dashboard.css / dashboard.js stay untouched
+Copy-Item (Join-Path $src "static\css\dashboard.css") (Join-Path $dst "static\css\mission-dashboard.css") -Force
+Copy-Item (Join-Path $src "static\js\dashboard.js")   (Join-Path $dst "static\js\mission-dashboard.js") -Force
+
+# 3. TEST 02 template, pointed at the new JS file name
+$text = $text.Replace("/static/js/dashboard.js", "/static/js/mission-dashboard.js")
+[System.IO.File]::WriteAllText((Join-Path $dst "templates\dashboard.html"), $text, $utf8)
+
+Write-Host ""
+Write-Host "Done. Files written:" -ForegroundColor Green
+Write-Host "  modules\webapp\templates\dashboard.html   (TEST 02)"
+Write-Host "  modules\webapp\static\css\mission-dashboard.css"
+Write-Host "  modules\webapp\static\js\mission-dashboard.js"
+Write-Host "Backup of old template: _backup_before_test02\dashboard.html.orig"
+Write-Host ""
+Write-Host "Now stop Flask (Ctrl+C), start it again, and press Ctrl+Shift+R at http://localhost:5001/dashboard"
